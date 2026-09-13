@@ -19,6 +19,8 @@ Tinkercad provides a simulation environment where this circuit can be virtually 
 
 
 ## Circuit Diagram:
+<img width="1530" height="1022" alt="image" src="https://github.com/user-attachments/assets/a2966594-f271-40c2-8570-c9d49b648886" />
+
  
 ## Procedure: //Modify the procedure based on your circuit
 
@@ -53,14 +55,76 @@ Step 7: Save Your Work
 
 
 ## Code:
+```
+int distanceThreshold = 0;
+int cm = 0;
+int inches = 0;
+
+long readUltrasonicDistance(int triggerPin, int echoPin)
+{
+  pinMode(triggerPin, OUTPUT);  
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+  pinMode(echoPin, INPUT);
+  return pulseIn(echoPin, HIGH);
+}
+
+void setup()
+{
+  Serial.begin(9600);
 
 
-## Output:
- 
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+}
+
+void loop()
+{
+  distanceThreshold = 350;
+
+  cm = 0.01723 * readUltrasonicDistance(7,6);
+  inches = (cm / 2.54);
+  Serial.print(cm);
+  Serial.print("cm, ");
+  Serial.print(inches);
+  Serial.println("in");
+  
+  
+  if (cm > distanceThreshold) {
+
+    digitalWrite(3, LOW);
+    digitalWrite(4, LOW);
+  }
+  if (cm <= distanceThreshold && cm > distanceThreshold - 100) {
+    digitalWrite(2, HIGH);
+    digitalWrite(3, LOW);
+    digitalWrite(4, LOW);
+  }
+  if (cm <= distanceThreshold - 100 && cm > distanceThreshold - 250) {
+
+    digitalWrite(3, HIGH);
+    digitalWrite(4, LOW);
+  }
+  if (cm <= distanceThreshold - 250 && cm > distanceThreshold - 350) {
+
+    digitalWrite(3, HIGH);
+    digitalWrite(4, HIGH);
+  }
+  if (cm <= distanceThreshold - 350) {
+
+    digitalWrite(3, HIGH);
+    digitalWrite(4, HIGH);
+  }
+  delay(100); 
+}
+```
+
+## Output: 
+<img width="1918" height="1198" alt="Screenshot 2026-09-13 172023" src="https://github.com/user-attachments/assets/6a229ae7-2c22-453b-bca4-93e50adf36e3" />
 
 
 ## Result
-
-
-Result:
 The simulation successfully measured the distance between the ultrasonic sensor  HC-SR04 and the object. The real-time distance values were accurately displayed on the serial monitor in centimeters.
